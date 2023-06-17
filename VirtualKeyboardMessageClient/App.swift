@@ -57,6 +57,10 @@ struct VirtualKeyboardMessageClientApp: App {
                 }
             )
             .onReceive(
+                NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification),
+                perform: { _ in disableExpandButton()}
+            )
+            .onReceive(
                 bluetoothInteractor
                     .statePublisher()
                     .receive(on: DispatchQueue.main)
@@ -80,6 +84,12 @@ struct VirtualKeyboardMessageClientApp: App {
             )
         }
         .windowResizability(.contentSize)
+    }
+    
+    private func disableExpandButton() {
+        for window in NSApplication.shared.windows {
+            window.standardWindowButton(.zoomButton)?.isEnabled = false
+        }
     }
     
     private func on(captureEnabled: Bool) {
