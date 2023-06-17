@@ -22,10 +22,13 @@
 #define LED_BLINK_INTERVAL_NORMAL_SECONDS 2
 #define LED_BLINK_INTERVAL_CONNECTED_SECONDS 0.25
 
+// OS section
 mbed::Timer timer;
 
+// HID
 USBKeyboard key;
 
+// BLE definitions
 BLEService messagesService(MESSAGES_SERVICE_UUID);
 
 BLECharacteristic messageRxCharacteristic(
@@ -35,8 +38,8 @@ BLECharacteristic messageRxCharacteristic(
   true
 );
 
+// internal state
 bool isConnected = false;
-
 bool ledActive = false;
 
 int main() {
