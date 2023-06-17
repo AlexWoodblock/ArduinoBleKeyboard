@@ -8,7 +8,7 @@
 import Combine
 import CoreBluetooth
 
-// TODO: icon
+// TODO: README
 /// Interactor responsible for communications between the application and keyboard emulator.
 class BluetoothInteractor {
     
@@ -162,6 +162,8 @@ class BluetoothInteractor {
         connectionDesiredSubject.send(shouldBeConnected)
     }
     
+    /// Attempts to send input to BLE device.
+    /// Returns immediately, send is not guaranteed - listen to current state to determine if send can be performed.
     func send(keyPress: KeyPress) {
         inputSubject.send(keyPress)
     }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 // TODO: fix resizing and text being partially hidden!
+// TODO: add feedback for typing!
 /// View displaying connectivity between your computer and the keyboard emulator.
 struct ConnectivityView: View {
     
@@ -58,7 +59,7 @@ struct ConnectivityView: View {
                 Spacer().frame(width: 32.0)
                 
                 
-                Image(systemName: "keyboard")
+                Image(systemName: keyboardSymbolName())
                     .font(.system(size: 72.0))
                     .foregroundColor(accentColor())
             }
@@ -78,6 +79,14 @@ struct ConnectivityView: View {
                 connectionAnimationStep = (connectionAnimationStep + 1) % ConnectivityView.animationStepsCount
                 try? await Task.sleep(for: ConnectivityView.animationStepDuration)
             }
+        }
+    }
+    
+    private func keyboardSymbolName() -> String {
+        if connectivityState == .connected {
+            return "keyboard.fill"
+        } else {
+            return "keyboard"
         }
     }
     

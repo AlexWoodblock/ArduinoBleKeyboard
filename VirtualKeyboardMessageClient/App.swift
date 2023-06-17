@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 
+/// Main application class.
 @main
 struct VirtualKeyboardMessageClientApp: App {
     
@@ -42,6 +43,7 @@ struct VirtualKeyboardMessageClientApp: App {
                 makeWindowsTransparent()
                 setupKeyListener()
             }
+            .navigationTitle("window.title")
         }
         .windowResizability(.contentSize)
     }

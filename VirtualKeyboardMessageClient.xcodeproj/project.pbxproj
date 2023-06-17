@@ -80,6 +80,7 @@
 		38A008852A37C12D00F050EB /* VirtualKeyboardMessageClient */ = {
 			isa = PBXGroup;
 			children = (
+				38A008A52A38754800F050EB /* Logs.swift */,
 				38A008B42A38F0A000F050EB /* HID */,
 				38A008A22A386D6700F050EB /* Combine */,
 				38A0089D2A37F2D200F050EB /* View */,
@@ -90,7 +91,6 @@
 				38A0088F2A37C12E00F050EB /* VirtualKeyboardMessageClient.entitlements */,
 				38A0088C2A37C12E00F050EB /* Preview Content */,
 				38A008992A37EBFC00F050EB /* Localizable.strings */,
-				38A008A52A38754800F050EB /* Logs.swift */,
 			);
 			path = VirtualKeyboardMessageClient;
 			sourceTree = "<group>";

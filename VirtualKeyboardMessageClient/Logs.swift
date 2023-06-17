@@ -7,10 +7,12 @@
 
 import Foundation
 
+/// Log an error.
 func logError(_ msg: String) {
     print("[ERROR] \(msg)")
 }
 
+/// Log an informational message.
 func logInfo(_ msg: String) {
     print("[INFO] \(msg)")
 }

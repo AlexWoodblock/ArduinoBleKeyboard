@@ -8,6 +8,7 @@
 import Combine
 import CoreBluetooth
 
+/// Helper class taking role of `CBPeripheralDelegate` and applying reactivity to it.
 class CombinePeripheralDelegate: NSObject, CBPeripheralDelegate {
     
     fileprivate enum DiscoveryResult {
@@ -18,14 +19,19 @@ class CombinePeripheralDelegate: NSObject, CBPeripheralDelegate {
     private let servicesDiscoveredSubject = PassthroughSubject<CombinePeripheralDelegate.DiscoveryResult, Never>()
     private let characteristicsDiscoveredSubject = PassthroughSubject<CombinePeripheralDelegate.DiscoveryResult, Never>()
     
+    /// Suspend until characteristics of the peripheral are not discovered.
+    /// May throw if discovery fails.
     func awaitCharacteristicsDiscovered() async throws {
         try await characteristicsDiscoveredSubject.awaitAndUnwrapResult()
     }
     
+    /// Suspend until services of the peripheral are not discovered.
+    /// May throw if discovery fails.
     func awaitServicesDiscovered() async throws {
         try await servicesDiscoveredSubject.awaitAndUnwrapResult()
     }
     
+    // MARK: CBPeripheralDelegate
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let error = error {
             logError("Failed to discover services, notifying...")

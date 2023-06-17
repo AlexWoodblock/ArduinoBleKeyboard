@@ -5,6 +5,7 @@
   Created by Alexander Leontev on 13.06.23.
   
 */
+"window.title" = "Keyboard emulator client";
 "connection.state.off" = "BLE is off or BLE permission is not granted";
 "connection.state.disconnected" = "Not connected to the keyboard emulator";
 "connection.state.searching" = "Searching for the keyboard emulator...";

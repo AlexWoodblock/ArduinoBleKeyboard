@@ -8,6 +8,7 @@
 import Combine
 import CoreBluetooth
 
+/// Helper class taking role of `CBCentralManagerDelegate` and applying reactivity to it.
 class CombineBluetoothDelegate: NSObject, CBCentralManagerDelegate {
     
     // global BLE state subjects
@@ -21,18 +22,24 @@ class CombineBluetoothDelegate: NSObject, CBCentralManagerDelegate {
         return stateSubject.eraseToAnyPublisher()
     }
     
+    /// Publisher emitting discovered `CBPeripheral`s.
+    /// Emits current value on subscription.
     var discoveredPeripheralPublisher: AnyPublisher<CBPeripheral?, Never> {
         return discoveredPeripheralSubject.eraseToAnyPublisher()
     }
     
+    /// Publisher emitting `true` if we're connected and `false` if we're not.
+    /// Emits current value on subscription.
     var isConnectedPublisher: AnyPublisher<Bool, Never> {
         return isConnectedToPeripheralSubject.eraseToAnyPublisher()
     }
     
+    /// Returns current connected peripheral (if there are any).
     var connectedPeripheral: CBPeripheral? {
         return discoveredPeripheralSubject.value
     }
     
+    /// Rest the state of the delegate. Should be called when disconnecting.
     func clear() {
         logInfo("Clearing Bluetooth delegate")
         
@@ -40,6 +47,7 @@ class CombineBluetoothDelegate: NSObject, CBCentralManagerDelegate {
         isConnectedToPeripheralSubject.send(false)
     }
     
+    // MARK: CBCentralManagerDelegate
     func centralManager(
         _ central: CBCentralManager,
         didDiscover peripheral: CBPeripheral,

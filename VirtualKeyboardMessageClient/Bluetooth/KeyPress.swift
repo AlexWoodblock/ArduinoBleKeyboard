@@ -7,14 +7,17 @@
 import Foundation
 import Cocoa
 
+/// Key press BLE-serializable description.
 struct KeyPress {
     
     private static let ctrlModifier: UInt16 = 0x01
     private static let shiftModifier: UInt16 = 0x02
     
-    let keyCode: UInt16
-    let keyModifier: UInt16
+    private let keyCode: UInt16
+    private let keyModifier: UInt16
     
+    /// Creates an instance of `KeyPress` from `NSEvent`.
+    /// `NSEvent` should be a keypress event, otherwise trash data may be sent.
     init(event: NSEvent) {
         keyCode = UInt16(virtualKeyCodeToHIDKeyCode(vKeyCode: Int(event.keyCode)))
         
@@ -31,6 +34,7 @@ struct KeyPress {
         keyModifier = resultingModifier
     }
     
+    /// Create `Data` to be send to BLE device.
     func data() -> Data {
         var data = Data()
         

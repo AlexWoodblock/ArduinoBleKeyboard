@@ -2,9 +2,6 @@
 #include <USBKeyboard.h>
 #include <ArduinoBLE.h>
 
-#define WATCHDOG_BLINK_EVERY_TICKS 1000
-#define WATCHDOG_STAY_OFF_EVERY_TICKS 100
-
 #define REPORT_ID_KEYBOARD 1
 
 #define KEY_CODE_MASK 0xFFFF
@@ -37,6 +34,7 @@ int main() {
   setupBle();
 
   while (true) {
+    // TODO: add LED blinking to signal we're still alive
     // TODO: maybe we should use timeout?
     BLE.poll();
   }
