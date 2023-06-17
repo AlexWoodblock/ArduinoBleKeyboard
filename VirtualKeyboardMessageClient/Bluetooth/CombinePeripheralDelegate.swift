@@ -51,7 +51,7 @@ class CombinePeripheralDelegate: NSObject, CBPeripheralDelegate {
             logError("Failed to discover characteristics, notifying...")
             characteristicsDiscoveredSubject.send(.discoveryFailed(error))
         } else {
-            logInfo("Characteristics disconnected, notifying...")
+            logInfo("Characteristics discovered, notifying...")
             characteristicsDiscoveredSubject.send(.discoverySucceeded)
         }
     }
