@@ -8,7 +8,6 @@
 import Combine
 import SwiftUI
 
-// TODO: fix resizing and text being partially hidden!
 /// View displaying connectivity between your computer and the keyboard emulator.
 struct ConnectivityView: View {
     

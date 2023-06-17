@@ -14,25 +14,29 @@ struct AppView: View {
     let keyEventSignalPublisher: AnyPublisher<(), Never>
     let bleState: BluetoothInteractor.ConnectionState
     let onCaptureSettingChanged: ((Bool) -> Void)?
+    let sizeReporter: (CGFloat, CGFloat) -> Void
     
     @State
     private var captureIsOn = false
     
     var body: some View {
-        VStack(alignment: .leading) {
+        GeometryReader { proxy in
             ConnectivityView(
                 keyEventSignalPublisher: keyEventSignalPublisher,
                 connectivityState: connectivityState(),
                 captureIsOn: $captureIsOn
             )
+            .animation(.default, value: captureIsOn)
+            .onChange(of: captureIsOn) { newValue in
+                onCaptureSettingChanged?(newValue)
+            }
+            .padding()
+            .background(.blue.opacity(0.2))
+            .background(.ultraThinMaterial)
+            .sizeReader { width, height in
+                sizeReporter(width, height)
+            }
         }
-        .animation(.default, value: captureIsOn)
-        .padding()
-        .onChange(of: captureIsOn) { newValue in
-            onCaptureSettingChanged?(newValue)
-        }
-        .background(.blue.opacity(0.2))
-        .background(.ultraThinMaterial)
     }
     
     private func connectivityState() -> ConnectivityView.ConnectivityState {
@@ -57,8 +61,10 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         AppView(
             keyEventSignalPublisher: Empty<(), Never>(completeImmediately: false).eraseToAnyPublisher(),
-            bleState: .connected
-        ) { _ in }
+            bleState: .connected,
+            onCaptureSettingChanged: { _ in },
+            sizeReporter: { (width, height) in }
+        )
     }
 }
 #endif

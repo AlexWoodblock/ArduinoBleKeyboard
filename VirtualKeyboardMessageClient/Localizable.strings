@@ -10,5 +10,5 @@
 "connection.state.disconnected" = "Not connected to the keyboard emulator";
 "connection.state.searching" = "Searching for the keyboard emulator...";
 "connection.state.connecting" = "Connecting to the keyboard emulator!";
-"connection.state.connected" = "Connected! Keep this window in focus, and type away!";
+"connection.state.connected" = "Connected! Keep this window in focus.";
 NSBluetoothAlwaysUsageDescription = "This application requires Bluetooth to connect to Virtual keyboard receiver";

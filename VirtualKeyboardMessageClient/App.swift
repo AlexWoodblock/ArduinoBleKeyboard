@@ -12,6 +12,8 @@ import SwiftUI
 @main
 struct VirtualKeyboardMessageClientApp: App {
     
+    private static let windowSizeEstimate: CGFloat = 600
+    
     private enum FocusTarget: Int, Hashable {
         case wholeApp = 0
     }
@@ -25,6 +27,21 @@ struct VirtualKeyboardMessageClientApp: App {
     @State
     private var bleState = BluetoothInteractor.ConnectionState.off
     
+    // Either SwiftUI interaction with windows is horrible,
+    // or I am missing something.
+    // Trying everything to not allow SwiftUI to compress my window ended in vain - it allowed the content to be compressed
+    // and partially hidden.
+    //
+    // What I'm doing here is setting the size to fixed one by doing this:
+    // 1. Set initial size to something sensible
+    // 2. Read size of actual content view through GeometryReader
+    // 3. Set this fixed size to the window so it will have correct size.
+    @State
+    private var windowHeight = VirtualKeyboardMessageClientApp.windowSizeEstimate
+    
+    @State
+    private var windowWidth = VirtualKeyboardMessageClientApp.windowSizeEstimate
+    
     var body: some Scene {
         WindowGroup {
             AppView(
@@ -33,7 +50,11 @@ struct VirtualKeyboardMessageClientApp: App {
                     .map { _ in () }
                     .eraseToAnyPublisher(),
                 bleState: bleState,
-                onCaptureSettingChanged: on(captureEnabled:)
+                onCaptureSettingChanged: on(captureEnabled:),
+                sizeReporter: { width, height in
+                    windowWidth = width
+                    windowHeight = height
+                }
             )
             .onReceive(
                 bluetoothInteractor
@@ -51,6 +72,12 @@ struct VirtualKeyboardMessageClientApp: App {
                 makeWindowsTransparent()
             }
             .navigationTitle("window.title")
+            .frame(
+                minWidth: windowWidth,
+                maxWidth: windowWidth,
+                minHeight: windowHeight,
+                maxHeight: windowHeight
+            )
         }
         .windowResizability(.contentSize)
     }

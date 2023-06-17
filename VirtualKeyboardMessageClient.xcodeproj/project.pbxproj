@@ -25,6 +25,7 @@
 		38A008BC2A3E0CFE00F050EB /* CombineBluetoothDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008BB2A3E0CFE00F050EB /* CombineBluetoothDelegate.swift */; };
 		38A008BE2A3E116800F050EB /* CombinePeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008BD2A3E116800F050EB /* CombinePeripheralDelegate.swift */; };
 		38A008C02A3E1ACF00F050EB /* WithPrevious.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008BF2A3E1ACF00F050EB /* WithPrevious.swift */; };
+		38A008C42A3E4F3400F050EB /* SizeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008C32A3E4F3400F050EB /* SizeReader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		38A008BB2A3E0CFE00F050EB /* CombineBluetoothDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineBluetoothDelegate.swift; sourceTree = "<group>"; };
 		38A008BD2A3E116800F050EB /* CombinePeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinePeripheralDelegate.swift; sourceTree = "<group>"; };
 		38A008BF2A3E1ACF00F050EB /* WithPrevious.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithPrevious.swift; sourceTree = "<group>"; };
+		38A008C32A3E4F3400F050EB /* SizeReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			children = (
 				38A008882A37C12D00F050EB /* AppView.swift */,
 				38A008B92A3BC3D900F050EB /* ConnectivityView.swift */,
+				38A008C32A3E4F3400F050EB /* SizeReader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				38A008AC2A38CD0800F050EB /* CombineLatest5.swift in Sources */,
 				38A008A62A38754800F050EB /* Logs.swift in Sources */,
 				38A008AA2A38C7B900F050EB /* AwaitSink.swift in Sources */,
+				38A008C42A3E4F3400F050EB /* SizeReader.swift in Sources */,
 				38A008B32A38E29700F050EB /* KeyPress.swift in Sources */,
 				38A008A42A386DB400F050EB /* AwaitFirst.swift in Sources */,
 				38A008872A37C12D00F050EB /* App.swift in Sources */,
