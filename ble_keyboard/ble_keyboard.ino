@@ -19,7 +19,7 @@
 
 #define CHARACTERISTIC_LENGTH 32
 
-#define LED_BLINK_INTERVAL_NORMAL_SECONDS 0.5
+#define LED_BLINK_INTERVAL_NORMAL_SECONDS 2
 #define LED_BLINK_INTERVAL_CONNECTED_SECONDS 0.25
 
 mbed::Timer timer;
@@ -56,7 +56,6 @@ void initialize() {
 }
 
 void onLoop() {
-  // TODO: maybe we should use timeout?
   BLE.poll();
       
   float time = timer.read();
