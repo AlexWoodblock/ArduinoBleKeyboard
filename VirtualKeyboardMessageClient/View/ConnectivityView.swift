@@ -5,14 +5,17 @@
 //  Created by Alexander Leontev on 16.06.23.
 //
 
+import Combine
 import SwiftUI
 
 // TODO: fix resizing and text being partially hidden!
-// TODO: add feedback for typing!
 /// View displaying connectivity between your computer and the keyboard emulator.
 struct ConnectivityView: View {
     
-    private static let animationStepDuration = Duration.milliseconds(250)
+    private static let animationAfterTypingDuration = Duration.milliseconds(200)
+    private static let sendingStepAnimationDuration = Duration.milliseconds(100)
+
+    private static let connectivityStepAnimationDuration = Duration.milliseconds(250)
     private static let animationStepsCount = 4
     
     /// The state describing current connection between the application
@@ -25,7 +28,18 @@ struct ConnectivityView: View {
         case connected
     }
     
+    private enum AnimationState {
+        case none
+        case connectivity
+        case sending
+    }
+    
+    let keyEventSignalPublisher: AnyPublisher<Void, Never>
+    
     let connectivityState: ConnectivityState
+    
+    @State
+    private var typedLastTimeAt = Date.distantPast
     
     @State
     private var connectionAnimationStep = 0
@@ -69,16 +83,29 @@ struct ConnectivityView: View {
             
             Text(connectionText())
         }
-        .task(id: connectivityState) {
-            guard connectionAnimated() else {
+        .onReceive(
+            keyEventSignalPublisher,
+            perform: { _ in
+                typedLastTimeAt = Date.now
+            }
+        )
+        .task(id: animationState()) {
+            switch animationState() {
+            case .none:
                 connectionAnimationStep = ConnectivityView.animationStepsCount - 1
+            case .connectivity:
+                await animateIndicator(stepDuration: ConnectivityView.connectivityStepAnimationDuration)
+            case .sending:
+                await animateIndicator(stepDuration: ConnectivityView.sendingStepAnimationDuration)
                 return
             }
-            
-            while (!Task.isCancelled) {
-                connectionAnimationStep = (connectionAnimationStep + 1) % ConnectivityView.animationStepsCount
-                try? await Task.sleep(for: ConnectivityView.animationStepDuration)
-            }
+        }
+    }
+    
+    private func animateIndicator(stepDuration: Duration) async {
+        while (!Task.isCancelled) {
+            connectionAnimationStep = (connectionAnimationStep + 1) % ConnectivityView.animationStepsCount
+            try? await Task.sleep(for: stepDuration)
         }
     }
     
@@ -109,18 +136,23 @@ struct ConnectivityView: View {
         return Double(connectionAnimationStep) / Double(ConnectivityView.animationStepsCount)
     }
     
-    private func connectionAnimated() -> Bool {
+    private func animationState() -> AnimationState {
         switch connectivityState {
         case .connecting:
-            return true
-        case .off:
-            return false
+            fallthrough
         case .searching:
-            return true
+            return .connectivity
+        case .off:
+            return .none
         case .disconnected:
-            return false
+            return .none
         case .connected:
-            return false
+            let passedSinceLastTypeEvent = Duration.seconds(Date.now.timeIntervalSince1970 - typedLastTimeAt.timeIntervalSince1970)
+            if passedSinceLastTypeEvent < ConnectivityView.animationAfterTypingDuration {
+                return .sending
+            } else {
+                return .none
+            }
         }
     }
     
@@ -143,7 +175,15 @@ struct ConnectivityView: View {
 #if DEBUG
 struct ConnectivityView_Previews: PreviewProvider {
     static var previews: some View {
-        ConnectivityView(connectivityState: .searching, captureIsOn: Binding.constant(true))
+        ConnectivityView(
+            keyEventSignalPublisher: Timer.publish(
+                every: 0.1,
+                on: RunLoop.main,
+                in: RunLoop.Mode.common
+            ).map { _ in () }.eraseToAnyPublisher(),
+            connectivityState: .connected,
+            captureIsOn: Binding.constant(true)
+        )
     }
 }
 #endif

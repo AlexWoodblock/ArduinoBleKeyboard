@@ -28,6 +28,10 @@ struct VirtualKeyboardMessageClientApp: App {
     var body: some Scene {
         WindowGroup {
             AppView(
+                keyEventSignalPublisher: keyEventMonitoringInteractor
+                    .capturedEventPublisher
+                    .map { _ in () }
+                    .eraseToAnyPublisher(),
                 bleState: bleState,
                 onCaptureSettingChanged: on(captureEnabled:)
             )
@@ -38,10 +42,13 @@ struct VirtualKeyboardMessageClientApp: App {
             ) { bleConnectionState in
                 self.bleState = bleConnectionState
             }
+            .onReceive(
+                keyEventMonitoringInteractor.capturedEventPublisher.map { KeyPress(event: $0) },
+                perform: bluetoothInteractor.send(keyPress:)
+            )
             .focused($focusTarget, equals: FocusTarget.wholeApp)
             .onAppear {
                 makeWindowsTransparent()
-                setupKeyListener()
             }
             .navigationTitle("window.title")
         }
@@ -67,12 +74,6 @@ struct VirtualKeyboardMessageClientApp: App {
                 $0.isOpaque = false
                 $0.backgroundColor = .clear
             }
-        }
-    }
-    
-    private func setupKeyListener() {
-        keyEventMonitoringInteractor.onCapturedEvent = { event in
-            bluetoothInteractor.send(keyPress: KeyPress(event: event))
         }
     }
 }

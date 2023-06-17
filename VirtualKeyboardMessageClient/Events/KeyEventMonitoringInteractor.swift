@@ -5,14 +5,18 @@
 //  Created by Alexander Leontev on 13.06.23.
 //
 
+import Combine
 import Foundation
 import Cocoa
 
 /// Interactor to capture keyboard events for the focused window.
 class KeyEventMonitoringInteractor {
     
-    /// Callback for captured events. Will be called for each `keyDown` event.
-    var onCapturedEvent: ((NSEvent) -> Void)? = nil
+    var capturedEventPublisher: AnyPublisher<NSEvent, Never> {
+        return capturedEventSubject.eraseToAnyPublisher()
+    }
+    
+    private let capturedEventSubject = PassthroughSubject<NSEvent, Never>()
     
     private var monitorHandle: Any? = nil
     
@@ -28,7 +32,7 @@ class KeyEventMonitoringInteractor {
                     return event
                 }
                 
-                self?.onCapturedEvent?(event)
+                self?.capturedEventSubject.send(event)
                 return nil
             }
         } else {

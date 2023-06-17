@@ -5,21 +5,15 @@
 //  Created by Alexander Leontev on 12.06.23.
 //
 
+import Combine
 import SwiftUI
 
 /// Main view for the app.
 struct AppView: View {
     
-    private let bleState: BluetoothInteractor.ConnectionState
-    private let onCaptureSettingChanged: ((Bool) -> Void)?
-    
-    init(
-        bleState: BluetoothInteractor.ConnectionState = .off,
-        onCaptureSettingChanged: ((Bool) -> Void)? = nil
-    ) {
-        self.bleState = bleState
-        self.onCaptureSettingChanged = onCaptureSettingChanged
-    }
+    let keyEventSignalPublisher: AnyPublisher<(), Never>
+    let bleState: BluetoothInteractor.ConnectionState
+    let onCaptureSettingChanged: ((Bool) -> Void)?
     
     @State
     private var captureIsOn = false
@@ -27,6 +21,7 @@ struct AppView: View {
     var body: some View {
         VStack(alignment: .leading) {
             ConnectivityView(
+                keyEventSignalPublisher: keyEventSignalPublisher,
                 connectivityState: connectivityState(),
                 captureIsOn: $captureIsOn
             )
@@ -60,7 +55,10 @@ struct AppView: View {
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        AppView()
+        AppView(
+            keyEventSignalPublisher: Empty<(), Never>(completeImmediately: false).eraseToAnyPublisher(),
+            bleState: .connected
+        ) { _ in }
     }
 }
 #endif
