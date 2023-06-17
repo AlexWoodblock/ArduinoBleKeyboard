@@ -81,7 +81,26 @@ class CombineBluetoothDelegate: NSObject, CBCentralManagerDelegate {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         let state = central.state
-        logInfo("New Bluetooth manager state: \(state)")
+        
+        let stateDescription: String
+        switch state {
+        case .poweredOff:
+            stateDescription = "poweredOff"
+        case .unknown:
+            stateDescription = "unknown"
+        case .resetting:
+            stateDescription = "resetting"
+        case .unsupported:
+            stateDescription = "unsupported"
+        case .unauthorized:
+            stateDescription = "unauthorized"
+        case .poweredOn:
+            stateDescription = "poweredOn"
+        @unknown default:
+            stateDescription = "unknown (default fallback)"
+        }
+        
+        logInfo("Bluetooth manager state updated: \(stateDescription)")
         stateSubject.send(state)
     }
     
