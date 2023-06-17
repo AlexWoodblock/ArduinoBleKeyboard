@@ -26,3 +26,6 @@ BLE specifications in this firmware are pretty simple:
 - Integers should be big-endian
 
 It's not intended to be used as a keyboard replacement for something serious - if you need a keyboard, just go and buy one. This is mostly for fun and to see what interesting things could be squeezed out of Arduino.
+
+# Known problems
+- Sending input while screen is locked will lock up the device, leading to BLE connection loss sometimes. 
