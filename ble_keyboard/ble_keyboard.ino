@@ -19,6 +19,11 @@
 
 #define CHARACTERISTIC_LENGTH 32
 
+#define LED_BLINK_INTERVAL_NORMAL_SECONDS 0.5
+#define LED_BLINK_INTERVAL_CONNECTED_SECONDS 0.25
+
+mbed::Timer timer;
+
 USBKeyboard key;
 
 BLEService messagesService(MESSAGES_SERVICE_UUID);
@@ -30,16 +35,54 @@ BLECharacteristic messageRxCharacteristic(
   true
 );
 
+bool isConnected = false;
+
+bool ledActive = false;
+
 int main() {
-  setupBle();
+  initialize();
 
   while (true) {
-    // TODO: add LED blinking to signal we're still alive
-    // TODO: maybe we should use timeout?
-    BLE.poll();
+    onLoop();
   }
 
   return 0;
+}
+
+void initialize() {
+  timer.start();
+
+  setupBle();
+}
+
+void onLoop() {
+  // TODO: maybe we should use timeout?
+  BLE.poll();
+      
+  float time = timer.read();
+  float interval = 0;
+  if (isConnected) {
+    interval = LED_BLINK_INTERVAL_CONNECTED_SECONDS;
+  } else {
+    interval = LED_BLINK_INTERVAL_NORMAL_SECONDS;
+  }
+
+  if (time > interval) {
+    timer.reset();
+    flipRedLed();
+  }
+}
+
+void flipRedLed() {
+  int newLedValue = 0;
+
+  if (!ledActive) {
+    newLedValue = LOW;
+  } else {
+    newLedValue = HIGH;
+  }
+  digitalWrite(RED_LED, newLedValue);
+  ledActive = !ledActive;
 }
 
 void sendKeyCode(uint16_t keyCode, uint16_t keyModifier) {
@@ -70,12 +113,12 @@ void sendKeyCode(uint16_t keyCode, uint16_t keyModifier) {
 }
 
 void onBleConnected(BLEDevice device) {
-  digitalWrite(RED_LED, LOW);
+  isConnected = true;
   BLE.stopAdvertise();
 }
 
 void onBleDisconnected(BLEDevice device) {
-  digitalWrite(RED_LED, HIGH);
+  isConnected = false;
   BLE.advertise();
 }
 
