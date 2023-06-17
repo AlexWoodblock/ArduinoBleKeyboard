@@ -128,6 +128,7 @@ class BluetoothInteractor {
                 }
             }
             .switchToLatest()
+            .filter { connectionLost in connectionLost }
             .sink { [unowned self] _ in
                 self.suddenDisconnectionSubject.send(())
             }
