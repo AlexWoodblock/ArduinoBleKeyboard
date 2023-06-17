@@ -75,9 +75,6 @@ struct VirtualKeyboardMessageClientApp: App {
                 perform: bluetoothInteractor.send(keyPress:)
             )
             .focused($focusTarget, equals: FocusTarget.wholeApp)
-            .onAppear {
-                makeWindowsTransparent()
-            }
             .navigationTitle("window.title")
             .frame(
                 minWidth: windowWidth,
@@ -106,14 +103,5 @@ struct VirtualKeyboardMessageClientApp: App {
         }
         
         bluetoothInteractor.set(shouldBeConnected: captureEnabled)
-    }
-    
-    private func makeWindowsTransparent() {
-        DispatchQueue.main.async {
-            NSApp.windows.forEach {
-                $0.isOpaque = false
-                $0.backgroundColor = .clear
-            }
-        }
     }
 }
