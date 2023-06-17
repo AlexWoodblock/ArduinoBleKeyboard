@@ -10,7 +10,7 @@
 #define RED_LED 22
 
 #define MESSAGES_SERVICE_UUID "98AD"
-#define MESSAGE_TX_CHARACTERISTIC "98AF"
+#define MESSAGE_RX_CHARACTERISTIC "98AF"
 
 #define DEVICE_NAME "Virtual Keyboard"
 
@@ -23,8 +23,8 @@ USBKeyboard key;
 
 BLEService messagesService(MESSAGES_SERVICE_UUID);
 
-BLECharacteristic messageTxCharacteristic(
-  MESSAGE_TX_CHARACTERISTIC,
+BLECharacteristic messageRxCharacteristic(
+  MESSAGE_RX_CHARACTERISTIC,
   BLEWriteWithoutResponse,
   CHARACTERISTIC_LENGTH,
   true
@@ -79,8 +79,8 @@ void onBleDisconnected(BLEDevice device) {
   BLE.advertise();
 }
 
-void onTxCharacteristicUpdated(BLEDevice device, BLECharacteristic txCharacteristic) {
-  const uint8_t* value = txCharacteristic.value();
+void onRxCharacteristicUpdated(BLEDevice device, BLECharacteristic rxCharacteristic) {
+  const uint8_t* value = rxCharacteristic.value();
   
   // unprotected reads FTW! Let that buffer overflow
   uint16_t keyCode = value[1] | value[0] << 8;
@@ -96,7 +96,7 @@ void setupBle() {
   BLE.setDeviceName(DEVICE_NAME);
   BLE.setLocalName(DEVICE_NAME);
 
-  messagesService.addCharacteristic(messageTxCharacteristic);
+  messagesService.addCharacteristic(messageRxCharacteristic);
 
   BLE.setAdvertisedService(messagesService);
   BLE.addService(messagesService);
@@ -106,7 +106,7 @@ void setupBle() {
   BLE.setEventHandler(BLEConnected, onBleConnected);
   BLE.setEventHandler(BLEDisconnected, onBleDisconnected);
 
-  messageTxCharacteristic.setEventHandler(BLEWritten, onTxCharacteristicUpdated);
+  messageRxCharacteristic.setEventHandler(BLEWritten, onRxCharacteristicUpdated);
 
   BLE.advertise();
 }
