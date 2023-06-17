@@ -18,6 +18,9 @@ struct VirtualKeyboardMessageClientApp: App {
         case wholeApp = 0
     }
     
+    @NSApplicationDelegateAdaptor(AppDelegate.self)
+    var appDelegate: AppDelegate
+    
     @FocusState
     private var focusTarget: FocusTarget?
     

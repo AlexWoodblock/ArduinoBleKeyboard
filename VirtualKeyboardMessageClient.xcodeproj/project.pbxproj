@@ -26,6 +26,7 @@
 		38A008BE2A3E116800F050EB /* CombinePeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008BD2A3E116800F050EB /* CombinePeripheralDelegate.swift */; };
 		38A008C02A3E1ACF00F050EB /* WithPrevious.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008BF2A3E1ACF00F050EB /* WithPrevious.swift */; };
 		38A008C42A3E4F3400F050EB /* SizeReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008C32A3E4F3400F050EB /* SizeReader.swift */; };
+		38A008C62A3E53DA00F050EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A008C52A3E53DA00F050EB /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		38A008BD2A3E116800F050EB /* CombinePeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinePeripheralDelegate.swift; sourceTree = "<group>"; };
 		38A008BF2A3E1ACF00F050EB /* WithPrevious.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithPrevious.swift; sourceTree = "<group>"; };
 		38A008C32A3E4F3400F050EB /* SizeReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeReader.swift; sourceTree = "<group>"; };
+		38A008C52A3E53DA00F050EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				38A008962A37EB6200F050EB /* Events */,
 				38A008952A37C28F00F050EB /* Bluetooth */,
 				38A008862A37C12D00F050EB /* App.swift */,
+				38A008C52A3E53DA00F050EB /* AppDelegate.swift */,
 				38A0088A2A37C12E00F050EB /* Assets.xcassets */,
 				38A0088F2A37C12E00F050EB /* VirtualKeyboardMessageClient.entitlements */,
 				38A0088C2A37C12E00F050EB /* Preview Content */,
@@ -240,6 +243,7 @@
 				38A008872A37C12D00F050EB /* App.swift in Sources */,
 				38A008A12A37FBFF00F050EB /* BluetoothInteractor.swift in Sources */,
 				38A008BE2A3E116800F050EB /* CombinePeripheralDelegate.swift in Sources */,
+				38A008C62A3E53DA00F050EB /* AppDelegate.swift in Sources */,
 				38A008BA2A3BC3D900F050EB /* ConnectivityView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
