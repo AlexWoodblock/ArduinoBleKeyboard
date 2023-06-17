@@ -8,7 +8,6 @@
 import Combine
 import CoreBluetooth
 
-// TODO: README
 /// Interactor responsible for communications between the application and keyboard emulator.
 class BluetoothInteractor {
     
