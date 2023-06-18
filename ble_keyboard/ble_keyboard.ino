@@ -1,33 +1,23 @@
-// TODO: revert LED behavior to old one (blink when disconnected, stay on when connected)
 #include <mbed.h>
 #include <USBKeyboard.h>
 #include <ArduinoBLE.h>
 #include <nrf_rtc.h>
 
+// HID
 #define REPORT_ID_KEYBOARD 1
 
+// BLE data protocol
 #define KEY_CODE_MASK 0xFFFF
 #define KEY_MODIFIER_MASK (0xFFFF << 16)
-
-#define RED_LED 22
-
 #define MESSAGES_SERVICE_UUID "98AD"
 #define MESSAGE_RX_CHARACTERISTIC "98AF"
-
 #define DEVICE_NAME "Virtual Keyboard"
-
-#define CONNECT_POLL_INTERVAL 500
-#define CONNECTED_POLL_INTERVAL 1
-
 #define CHARACTERISTIC_LENGTH 32
 
-#define LED_BLINK_INTERVAL_NORMAL_SECONDS 2
-#define LED_BLINK_INTERVAL_CONNECTED_SECONDS 0.25
+// Custom LED declarations
+#define RED_LED 22
 
-// OS section
-mbed::Timer timer;
-
-// HID
+// Keyboard declaration
 USBKeyboard key;
 
 // BLE definitions
@@ -40,54 +30,18 @@ BLECharacteristic messageRxCharacteristic(
   true
 );
 
-// internal state
-bool isConnected = false;
-bool ledActive = false;
-
 int main() {
   fixBootloader();
-
-  initialize();
+  
+  if (!setupBle()) {
+    return -1;
+  }
 
   while (true) {
-    onLoop();
+    BLE.poll();
   }
 
   return 0;
-}
-
-void initialize() {
-  timer.start();
-  setupBle();
-}
-
-void onLoop() {
-  BLE.poll();
-      
-  float time = timer.read();
-  float interval = 0;
-  if (isConnected) {
-    interval = LED_BLINK_INTERVAL_CONNECTED_SECONDS;
-  } else {
-    interval = LED_BLINK_INTERVAL_NORMAL_SECONDS;
-  }
-
-  if (time > interval) {
-    timer.reset();
-    flipRedLed();
-  }
-}
-
-void flipRedLed() {
-  int newLedValue = 0;
-
-  if (!ledActive) {
-    newLedValue = LOW;
-  } else {
-    newLedValue = HIGH;
-  }
-  digitalWrite(RED_LED, newLedValue);
-  ledActive = !ledActive;
 }
 
 void sendKeyCode(uint16_t keyCode, uint16_t keyModifier) {
@@ -118,13 +72,13 @@ void sendKeyCode(uint16_t keyCode, uint16_t keyModifier) {
 }
 
 void onBleConnected(BLEDevice device) {
-  isConnected = true;
   BLE.stopAdvertise();
+  digitalWrite(RED_LED, LOW);
 }
 
 void onBleDisconnected(BLEDevice device) {
-  isConnected = false;
   BLE.advertise();
+  digitalWrite(RED_LED, HIGH);
 }
 
 void onRxCharacteristicUpdated(BLEDevice device, BLECharacteristic rxCharacteristic) {
@@ -136,9 +90,9 @@ void onRxCharacteristicUpdated(BLEDevice device, BLECharacteristic rxCharacteris
   sendKeyCode(keyCode, keyModifier);
 }
 
-void setupBle() {
+bool setupBle() {
   if (!BLE.begin()) {
-    while (true);
+    return false;
   }
 
   BLE.setDeviceName(DEVICE_NAME);
@@ -157,6 +111,8 @@ void setupBle() {
   messageRxCharacteristic.setEventHandler(BLEWritten, onRxCharacteristicUpdated);
 
   BLE.advertise();
+
+  return true;
 }
 
 void fixBootloader() {
