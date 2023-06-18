@@ -20,22 +20,20 @@ struct AppView: View {
     private var captureIsOn = false
     
     var body: some View {
-        GeometryReader { proxy in
-            ConnectivityView(
-                keyEventSignalPublisher: keyEventSignalPublisher,
-                connectivityState: connectivityState(),
-                captureIsOn: $captureIsOn
-            )
-            .animation(.default, value: captureIsOn)
-            .onChange(of: captureIsOn) { newValue in
-                onCaptureSettingChanged?(newValue)
-            }
-            .padding()
-            .background(.blue.opacity(0.2))
-            .background(.ultraThinMaterial)
-            .sizeReader { width, height in
-                sizeReporter(width, height)
-            }
+        ConnectivityView(
+            keyEventSignalPublisher: keyEventSignalPublisher,
+            connectivityState: connectivityState(),
+            captureIsOn: $captureIsOn
+        )
+        .animation(.default, value: captureIsOn)
+        .onChange(of: captureIsOn) { newValue in
+            onCaptureSettingChanged?(newValue)
+        }
+        .padding()
+        .background(.blue.opacity(0.2))
+        .background(.ultraThinMaterial)
+        .sizeReader { width, height in
+            sizeReporter(width, height)
         }
     }
     
